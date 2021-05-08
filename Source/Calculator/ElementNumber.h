@@ -10,8 +10,16 @@
  * 
  */
 UCLASS()
-class CALCULATOR_API AElementNumber : public AElement
+class CALCULATOR_API AElementNumber: public AElement
 {
 	GENERATED_BODY()
 	
+private:
+	UPROPERTY(EditAnywhere, Category = "Main property")
+	FString Number;
+
+public:
+	AElementNumber();
+
+	virtual void React() override;
 };

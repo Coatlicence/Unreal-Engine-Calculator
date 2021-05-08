@@ -97,9 +97,6 @@ void ACalculatorCharacter::React()
 
 	if (Element != nullptr)
 		Element->React();
-
-	DrawDebugLine(GetWorld(), start, end, FColor::Emerald, false, 3.f);
-
 }
 
 void ACalculatorCharacter::MoveForward(float Value)
