@@ -14,4 +14,8 @@ class CALCULATOR_API AElementEqual : public AElement
 {
 	GENERATED_BODY()
 	
+public:
+	AElementEqual();
+
+	virtual void React() override;
 };

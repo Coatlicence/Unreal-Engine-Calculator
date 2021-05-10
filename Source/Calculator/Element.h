@@ -10,6 +10,7 @@
 #include "Element.generated.h"
 
 using namespace std;
+using namespace Maintenance;
 
 UCLASS(abstract)
 class CALCULATOR_API AElement : public AActor
@@ -22,6 +23,7 @@ public:
 
 	UStaticMeshComponent* StaticMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Text")
 	UTextRenderComponent* AppointmentTextComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "React with")

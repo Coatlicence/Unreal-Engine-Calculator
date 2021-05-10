@@ -14,6 +14,8 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
+#define debugMessage(x) GEngine->AddOnScreenDebugMessage(INDEX_NONE, 20.f, FColor::Magenta, x)
+
 //////////////////////////////////////////////////////////////////////////
 // ACalculatorCharacter
 

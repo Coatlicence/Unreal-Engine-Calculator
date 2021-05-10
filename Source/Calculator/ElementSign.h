@@ -6,12 +6,13 @@
 #include "ElementNumber.h"
 #include "ElementSign.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class CALCULATOR_API AElementSign : public AElementNumber
 {
 	GENERATED_BODY()
-	
+
+public:
+	AElementSign();
+
+	virtual void React() override;
 };

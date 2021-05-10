@@ -5,6 +5,8 @@
 #include "Engine/Engine.h"
 #include "Kismet/KismetStringLibrary.h"
 
+#define debugMessage(x) GEngine->AddOnScreenDebugMessage(INDEX_NONE, 20.f, FColor::Magenta, x)
+
 
 AElementNumber::AElementNumber()
 {
@@ -20,8 +22,38 @@ void AElementNumber::React()
 {
 	if (ExerciseVisualizer != nullptr)
 	{
-		auto ex = ExerciseVisualizer->GetExercise();
+		StringStack ex = ExerciseVisualizer->GetExercise();
+		
+		if (ex.begin() != ex.end())
+		{
+			FString element = ex[ex.Num() - 1];
+			
+			/// checking last symbol of exercie
+			FString Fcharacter = "";
 
-		//if 
+			Fcharacter = Fcharacter.AppendChar(element[element.Len() - 1]);
+
+			TypeToCheck TypeOfCharacter = GetCharacterType(Fcharacter);
+			
+			/// reacting on last symbol
+			switch (TypeOfCharacter)
+			{
+			case TypeToCheck::None:
+				return;
+
+
+			case TypeToCheck::Number:
+				ExerciseVisualizer->ExerciseAddToEnd(Number);
+				break;
+
+			case TypeToCheck::Sign:
+				ExerciseVisualizer->ExerciseAdd(Number);
+				break;
+			}
+		}
+		else
+		{
+			ExerciseVisualizer->ExerciseAdd(Number);
+		}
 	}
 }

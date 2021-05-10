@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include <map>
+#include <functional>
 #include "ExerciseVisualizer.generated.h"
 
 typedef TArray<FString> StringStack;
@@ -43,19 +44,34 @@ public:
 
 	StringStack GetExercise();
 
-	void AddExercise(FString sigh);
+	void ExerciseAdd(FString sign);
+
+	void ExerciseAddToEnd(FString sign);
+
+	void ExerciseChangeLastTo(FString sign);
 };
 
 
 namespace Maintenance
 {
+	const std::map<FString, std::function<int(int, int)>> SignAct =
+	{
+		std::make_pair("+", [=](int a, int b) { return a + b; }),
+		std::make_pair("-", [=](int a, int b) { return a - b; }),
+	};
+
 	const enum class TypeToCheck
 	{
+		None,
 		Sign,
 		Number
 	};
 
 	bool isCharacterBelongsTo(TypeToCheck group, FString character);
+
+	bool isCharacterBelongsTo(TypeToCheck group, TCHAR character);
+
+	TypeToCheck GetCharacterType(FString character);
 
 	namespace
 	{ 
@@ -77,3 +93,4 @@ namespace Maintenance
 		};
 	}
 }
+

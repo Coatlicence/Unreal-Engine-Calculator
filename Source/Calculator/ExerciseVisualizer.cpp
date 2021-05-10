@@ -42,6 +42,9 @@ void AExerciseVisualizer::BeginPlay()
 void AExerciseVisualizer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
+
+	if (Exercise.end() != Exercise.begin())
+		ExerciseTextComponent->SetText(Exercise[Exercise.Num() - 1]);
 }
 
 TArray<FString> AExerciseVisualizer::GetExercise()
@@ -49,10 +52,27 @@ TArray<FString> AExerciseVisualizer::GetExercise()
 	return Exercise;
 }
 
-void AExerciseVisualizer::AddExercise(FString sigh)
+void AExerciseVisualizer::ExerciseAdd(FString sign)
 {
+	//if (Exercise.end() != Exercise.begin())
+	Exercise.Add(sign);
+}
+
+void AExerciseVisualizer::ExerciseAddToEnd(FString sign)
+{
+	if (Exercise.end() != Exercise.begin())
+		Exercise[Exercise.Num() - 1].Append(sign);
 	
 }
+
+void AExerciseVisualizer::ExerciseChangeLastTo(FString sign)
+{
+	if (Exercise.end() != Exercise.begin())
+		Exercise[Exercise.Num() - 1] = sign;
+
+}
+
+
 
 bool Maintenance::isCharacterBelongsTo(TypeToCheck group, FString character)
 {
@@ -65,3 +85,29 @@ bool Maintenance::isCharacterBelongsTo(TypeToCheck group, FString character)
 
 	return false;
 }
+
+bool Maintenance::isCharacterBelongsTo(TypeToCheck group, TCHAR character)
+{
+	FString fcharacter = "";
+
+	fcharacter = fcharacter.AppendChar(character);
+
+	return isCharacterBelongsTo(group, fcharacter);
+}
+
+Maintenance::TypeToCheck Maintenance::GetCharacterType(FString character)
+{
+	std::map<TypeToCheck, StringStack>::const_iterator it;
+
+	for (it = Map.cbegin(); it != Map.cend(); it++)
+	{
+		StringStack strstack = it->second;
+
+			for (int i = 0; i < strstack.Num(); i++)
+				if (strstack[i] == character)
+					return it->first;
+	}
+
+	return TypeToCheck::None;
+}
+

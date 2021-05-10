@@ -14,7 +14,7 @@ class CALCULATOR_API AElementNumber: public AElement
 {
 	GENERATED_BODY()
 	
-private:
+protected:
 	UPROPERTY(EditAnywhere, Category = "Main property")
 	FString Number;
 
