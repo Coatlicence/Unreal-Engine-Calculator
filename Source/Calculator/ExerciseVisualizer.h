@@ -42,13 +42,40 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	///----------------------------------------
+	// Getters
+
+	/// return copy of Exercise
 	StringStack GetExercise();
 
+	/// (Exercise.end() != Exercise.begin())
+	inline bool GetExerciseInitialized();
+
+	///---------------------------
+	// Setters
+
+
+	/// <summary>Adds new element with given sign</summary>
+	/// <param name="sign to add"></param>
 	void ExerciseAdd(FString sign);
 
+	/// <summary>Adds sign to last element</summary>
+	/// <param name="sign to add"></param>
 	void ExerciseAddToEnd(FString sign);
 
+	/// Changes last element to sign
 	void ExerciseChangeLastTo(FString sign);
+
+	/// <param name="INDEX">Element to change</param>
+	/// <param name="sign">sign to set</param>
+	void ExerciseSetAt(int INDEX, FString sign);
+
+	/// <summary>Removes element by index
+	/// it will also remove the next or previous element by ForwardRemove.
+	/// Would revert ForwardRemove, if it will goes out of expression</summary>
+	/// <param name="INDEX"></param>
+	/// <param name="ForwardRemove default is true"></param>
+	void ExerciseRemoveAt(int INDEX, bool ForwardRemove = true);
 };
 
 
@@ -72,6 +99,8 @@ namespace Maintenance
 	bool isCharacterBelongsTo(TypeToCheck group, TCHAR character);
 
 	TypeToCheck GetCharacterType(FString character);
+
+	TypeToCheck GetCharacterType(TCHAR character);
 
 	namespace
 	{ 

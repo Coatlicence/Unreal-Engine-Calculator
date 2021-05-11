@@ -5,6 +5,7 @@
 #include "ConstructorHelpers.h"
 #include "Engine/Engine.h"
 
+
 // Sets default values
 AExerciseVisualizer::AExerciseVisualizer()
 {
@@ -25,11 +26,10 @@ AExerciseVisualizer::AExerciseVisualizer()
 	ExerciseTextComponent = CreateDefaultSubobject<UTextRenderComponent>(TEXT("Exercise"));
 	ExerciseTextComponent->AttachToComponent(StaticMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	ExerciseTextComponent->SetWorldScale3D(FVector(2.f, 2.f, 2.f));
-	ExerciseTextComponent->SetWorldLocation(StaticMesh->GetComponentLocation() + FVector(10.f, 0.f, 0.f));
-
-	//ExerciseTextComponent->SetText(AElement::GetExercise().top().c_str());
-
+	ExerciseTextComponent->SetWorldLocation(StaticMesh->GetComponentLocation() + FVector(10.f, 200.f, 0.f));	
 }
+
+
 
 // Called when the game starts or when spawned
 void AExerciseVisualizer::BeginPlay()
@@ -38,41 +38,106 @@ void AExerciseVisualizer::BeginPlay()
 	
 }
 
+
+
 // Called every frame
 void AExerciseVisualizer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
 
-	if (Exercise.end() != Exercise.begin())
-		ExerciseTextComponent->SetText(Exercise[Exercise.Num() - 1]);
+	if (GetExerciseInitialized())
+	{
+		FString ex = "";
+
+		for (int i = 0; i < Exercise.Num(); i++)
+		{
+			ex = ex.Append(Exercise[i]);
+			ex = ex.Append(" ");
+		}
+
+		ExerciseTextComponent->SetText(ex);
+	}
 }
+
+
 
 TArray<FString> AExerciseVisualizer::GetExercise()
 {
 	return Exercise;
 }
 
+
+
+bool AExerciseVisualizer::GetExerciseInitialized()
+{
+	return (Exercise.end() != Exercise.begin());
+}
+
+
+
 void AExerciseVisualizer::ExerciseAdd(FString sign)
 {
-	//if (Exercise.end() != Exercise.begin())
+	bool NoInit = !GetExerciseInitialized();
+
+	bool characterIsSign = Maintenance::isCharacterBelongsTo(Maintenance::TypeToCheck::Sign, sign);
+
+	if ((NoInit) && (characterIsSign))
+		return;
+
 	Exercise.Add(sign);
 }
 
+
+
 void AExerciseVisualizer::ExerciseAddToEnd(FString sign)
 {
-	if (Exercise.end() != Exercise.begin())
+	if (GetExerciseInitialized())
+	{
 		Exercise[Exercise.Num() - 1].Append(sign);
-	
+	}
 }
+
+
 
 void AExerciseVisualizer::ExerciseChangeLastTo(FString sign)
 {
-	if (Exercise.end() != Exercise.begin())
+	if (GetExerciseInitialized())
 		Exercise[Exercise.Num() - 1] = sign;
 
 }
 
 
+
+void AExerciseVisualizer::ExerciseSetAt(int INDEX, FString sign)
+{
+	if (((INDEX >= 0) && (INDEX < Exercise.Num())) && (GetExerciseInitialized()))
+	{
+		TCHAR character = Exercise[INDEX][Exercise[INDEX].Len() - 1];
+
+		if (Maintenance::GetCharacterType(character) == Maintenance::GetCharacterType(sign[sign.Len() - 1]))
+		{
+			Exercise[INDEX] = sign;
+			
+			ExerciseRemoveAt(INDEX - 1, false);
+		}
+	}
+}
+
+void AExerciseVisualizer::ExerciseRemoveAt(int INDEX, bool ForwardRemove)
+{
+	int INDEXoffset = ForwardRemove ? (1) : (-1);
+
+	if ((INDEX + INDEXoffset) < 0)
+		INDEXoffset = 1;
+		
+	if ((INDEX + INDEXoffset) > Exercise.Num())
+		INDEXoffset = -1;
+
+	Exercise.RemoveAt(INDEX);
+	Exercise.RemoveAt(INDEX + INDEXoffset);
+}
+
+/// Maintenance namespace
 
 bool Maintenance::isCharacterBelongsTo(TypeToCheck group, FString character)
 {
@@ -86,6 +151,8 @@ bool Maintenance::isCharacterBelongsTo(TypeToCheck group, FString character)
 	return false;
 }
 
+
+
 bool Maintenance::isCharacterBelongsTo(TypeToCheck group, TCHAR character)
 {
 	FString fcharacter = "";
@@ -94,6 +161,8 @@ bool Maintenance::isCharacterBelongsTo(TypeToCheck group, TCHAR character)
 
 	return isCharacterBelongsTo(group, fcharacter);
 }
+
+
 
 Maintenance::TypeToCheck Maintenance::GetCharacterType(FString character)
 {
@@ -109,5 +178,15 @@ Maintenance::TypeToCheck Maintenance::GetCharacterType(FString character)
 	}
 
 	return TypeToCheck::None;
+}
+
+
+
+Maintenance::TypeToCheck Maintenance::GetCharacterType(TCHAR character)
+{
+	FString fcharacter = "";
+	fcharacter = fcharacter.AppendChar(character);
+
+	return GetCharacterType(fcharacter);
 }
 

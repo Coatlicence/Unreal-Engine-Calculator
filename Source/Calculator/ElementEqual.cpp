@@ -21,25 +21,35 @@ void AElementEqual::React()
 
 	if ((ex.end() != ex.begin()) && (ex.Num() >= 3))
 	{
-		for (int i = 1; i <= ex.Num() / 2; i += 2)
-		{
-			FString FirstNum, SecondNum;
-			
-			FirstNum  = ex[i - 1];
-			SecondNum = ex[i + 1];
-			
-			/// symbol(+ or -) of expression
-			FString Sign = ex[i];
+		float repeatTimes = ex.Num() / 2;
 
-			if ((isCharacterBelongsTo(TypeToCheck::Number, FirstNum [FirstNum.Len()  - 1])) &&
+		int Counter = 0;
+
+		while (Counter < repeatTimes)
+		{
+			Counter++;
+			int i = 0;
+
+			FString FirstNum, SecondNum;
+
+			FirstNum = ex[i];
+			SecondNum = (ex.Num() > (i + 2)) ? ex[i + 2] : "0";
+
+			/// symbol(+ or -) of expression
+			FString Sign = ex[i + 1];
+
+			if ((isCharacterBelongsTo(TypeToCheck::Number, FirstNum[FirstNum.Len() - 1])) &&
 				(isCharacterBelongsTo(TypeToCheck::Number, SecondNum[SecondNum.Len() - 1])) &&
-				(isCharacterBelongsTo(TypeToCheck::Sign,   Sign)))
+				(isCharacterBelongsTo(TypeToCheck::Sign, Sign)))
 			{
-				int First =  UKismetStringLibrary::Conv_StringToInt(FirstNum);
+				int First = UKismetStringLibrary::Conv_StringToInt(FirstNum);
 				int Second = UKismetStringLibrary::Conv_StringToInt(SecondNum);
-				
+
 				int result = SignAct.at(Sign)(First, Second);
 
+				ExerciseVisualizer->ExerciseSetAt(i + 2, UKismetStringLibrary::Conv_IntToString(result));
+
+				ex = ExerciseVisualizer->GetExercise();
 			}
 		}
 	}
